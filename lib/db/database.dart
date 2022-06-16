@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' as io;
 import 'package:path/path.dart';
+import 'package:sam/home_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
@@ -42,6 +43,7 @@ class DBHelper {
             " id INTEGER PRIMARY KEY,"
             " textValue TEXT,"
             " dbValue TEXT,"
+            " category TEXT,"
             " icon TEXT )");
     print("Tables created");
   }
@@ -80,6 +82,25 @@ class DBHelper {
     return await dbClient.rawQuery('SELECT createdAt FROM Stats WHERE createdAt like ?',[date+"%"]);
   }
 
+  static Future<List<ListObject>> getList() async {
+    // Get a reference to the database.
+    var dbClient = await db();
+
+    // Query the table for all The Recipes.
+    final List<Map<String, dynamic>> maps = await dbClient.query('ListObject');
+
+    // Convert the List<Map<String, dynamic> into a List<Recipe>.
+    return List.generate(maps.length, (i) {
+      return ListObject(
+        id: maps[i]['id'],
+        textValue: maps[i]['textValue'],
+        dbValue: maps[i]['dbValue'],
+        category: maps[i]['category'],
+        icon: maps[i]['icon']
+        // Same for the other properties
+      );
+    });
+  }
 
 
 
