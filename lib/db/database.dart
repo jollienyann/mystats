@@ -29,15 +29,15 @@ class DBHelper {
         "CREATE TABLE Stats("
             " id INTEGER PRIMARY KEY,"
             " createdAt TEXT DEFAULT CURRENT_TIMESTAMP,"
-            " myDay TEXT,"
-            " hangoverNight TEXT,"
-            " alcool TEXT,"
-            " sportMore1 TEXT,"
-            " sleepMore8 TEXT,"
-            " nap TEXT,"
-            " reallySick TEXT,"
-            " headache TEXT,"
-            " workMore4 TEXT )");
+            " v1 TEXT,"
+            " v2 TEXT,"
+            " v3 TEXT,"
+            " v4 TEXT,"
+            " v5 TEXT,"
+            " v6 TEXT,"
+            " v7 TEXT,"
+            " v8 TEXT,"
+            " v9 TEXT )");
     await db.execute(
         "CREATE TABLE ListObject("
             " id INTEGER PRIMARY KEY,"
@@ -48,11 +48,16 @@ class DBHelper {
     print("Tables created");
   }
 
-  static Future<void> saveListObject() async {
+  static Future<void> saveListObject(ListObject object) async {
+    String toInsert = object.textValue.toString();
+    String value = object.dbValue.toString();
+    String category = object.category.toString();
+    String icon = object.icon.toString();
+
     var dbClient = await db();
     await dbClient.transaction((txn) async {
       return await txn.rawInsert(
-          'INSERT INTO ListObject (textValue,dbValue,icon)VALUES(My Day,myDac,)');
+          'INSERT INTO ListObject (textValue,dbValue,category,icon)VALUES($toInsert,$value,$category,$icon)');
     });
   }
 
@@ -92,7 +97,6 @@ class DBHelper {
     // Convert the List<Map<String, dynamic> into a List<Recipe>.
     return List.generate(maps.length, (i) {
       return ListObject(
-        id: maps[i]['id'],
         textValue: maps[i]['textValue'],
         dbValue: maps[i]['dbValue'],
         category: maps[i]['category'],

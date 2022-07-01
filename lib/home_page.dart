@@ -10,25 +10,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   //https://stackoverflow.com/questions/60053914/flutter-onchanged-behaviour-in-radios-with-multiple-groups-not-working-as-expect
 
-  List<ListObject> options = [
-    ListObject(id: "1", textValue: "My Day", dbValue: "myDay"),
-    ListObject(id: "2", textValue: "Hangover night", dbValue: "hangoverNight"),
-    ListObject(id: "3", textValue: "Alcool", dbValue: "alcool"),
-    ListObject(id: "4", textValue: "Sport > 1h", dbValue: "sportMore1"),
-    ListObject(id: "5", textValue: "Sleep > 8h", dbValue: "sleepMore8"),
-    ListObject(id: "6", textValue: "Nap", dbValue: "nap"),
-    ListObject(id: "7", textValue: "Really sick", dbValue: "reallySick"),
-    ListObject(id: "8", textValue: "Headache", dbValue: "headache"),
-    ListObject(id: "9", textValue: "Work > 4h", dbValue: "workMore4")
-  ];
-
-  List<String> labels=['1','2','3','4','5'];
+  List<String> labels5 = ['1', '2', '3', '4', '5'];
+  List<String> labels2 = ['1', '2'];
 
   //Create attendance list to hold attendance
-  Map<String,String> attendance={};
+  Map<String, String> attendance = {};
 
   //Define you function that takes click
   void _onClick(String value) {
@@ -73,7 +61,9 @@ class _HomePageState extends State<HomePage> {
                     ListObject lo = new ListObject();
                     lo.textValue = valueText;
                     lo.dbValue = valueText.toLowerCase();
-                    options.add(lo);
+                    lo.category = "1";
+                    lo.icon = "1";
+                    DBHelper.saveListObject(lo);
                     Navigator.pop(context);
                   });
                 },
@@ -85,90 +75,250 @@ class _HomePageState extends State<HomePage> {
 
   String codeDialog = "";
   String valueText = "";
-  int iconCode=0;
+  int iconCode = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(
-          title:Text('MyStats')),
-      body: Container(
-          color:Colors.white,
-          child: ListView.builder(
-              itemCount: options.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    color:Colors.cyan,
-                    elevation: 10,
-                    child: ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          options[index].textValue.toString(),
-                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color:Colors.black),
-                        ),
-                      ),
-                      leading: CircleAvatar(
-                        radius: 30,
-                      ),
-                      trailing: Column(
-                        children: <Widget>[],
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: labels.map((s){
-                                return Flexible(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Radio(
-                                        groupValue: attendance[options[index].id],
-                                        value: s,
-                                        onChanged: (newValue) {
-                                          setState((){
-                                            print(options[index].textValue.toString() + " value" +newValue.toString());
-                                            attendance[options[index].id.toString()]=newValue.toString();
-                                            String result;
-                                            final now = new DateTime.now();
-                                            String formatter = DateFormat('yyyy-MM-dd').format(now);
-                                            DBHelper.getDate(formatter.toString()).then((res) {
-                                              result = res.toString();
-                                              print(result);
-                                              if (result == '[]') {
-                                                print(options[index].dbValue.toString()+" Index"+index.toString());
-                                                DBHelper.saveStats(options[index].dbValue.toString(),newValue.toString());
-                                              }else if(result != '[]'){
-                                                print(options[index].dbValue.toString()+" Index"+index.toString());
-                                                DBHelper.updateStats(options[index].dbValue.toString(), newValue.toString());
-                                              }
-                                            });
-                                            options.removeAt(index);//remove the item
-                                          });
-                                        },
-                                      ),
-                                      Text(s,style:TextStyle(color:Colors.black))
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
+      appBar: AppBar(title: Text('MyStats')),
+      body: FutureBuilder(
+        future: DBHelper.getList(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            print("no data");
+            return Container();
+          } else {
+            return Container(
+                color: Colors.white,
+                child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      if (snapshot.data[index].category.toString() == "1") {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            color: Colors.cyan,
+                            elevation: 10,
+                            child: ListTile(
+                              title: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  snapshot.data[index].textValue.toString(),
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              leading: CircleAvatar(
+                                radius: 30,
+                              ),
+                              trailing: Column(
+                                children: <Widget>[],
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: labels5.map((s) {
+                                        return Flexible(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Radio(
+                                                groupValue: attendance[
+                                                    snapshot.data[index].id],
+                                                value: s,
+                                                onChanged: (newValue) {
+                                                  setState(() {
+                                                    print(snapshot.data[index]
+                                                            .textValue
+                                                            .toString() +
+                                                        " value" +
+                                                        newValue.toString());
+                                                    attendance[snapshot
+                                                            .data[index].id
+                                                            .toString()] =
+                                                        newValue.toString();
+                                                    String result;
+                                                    final now =
+                                                        new DateTime.now();
+                                                    String formatter =
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(now);
+                                                    DBHelper.getDate(formatter
+                                                            .toString())
+                                                        .then((res) {
+                                                      result = res.toString();
+                                                      print(result);
+                                                      if (result == '[]') {
+                                                        print(snapshot
+                                                                .data[index]
+                                                                .dbValue
+                                                                .toString() +
+                                                            " Index" +
+                                                            index.toString());
+                                                        DBHelper.saveStats(
+                                                            snapshot.data[index]
+                                                                .dbValue
+                                                                .toString(),
+                                                            newValue
+                                                                .toString());
+                                                      } else if (result !=
+                                                          '[]') {
+                                                        print(snapshot
+                                                                .data[index]
+                                                                .dbValue
+                                                                .toString() +
+                                                            " Index" +
+                                                            index.toString());
+                                                        DBHelper.updateStats(
+                                                            snapshot.data[index]
+                                                                .dbValue
+                                                                .toString(),
+                                                            newValue
+                                                                .toString());
+                                                      }
+                                                    });
+                                                  });
+                                                },
+                                              ),
+                                              Text(s,
+                                                  style: TextStyle(
+                                                      color: Colors.black))
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              })
+                          ),
+                        );
+                      } else if (snapshot.data[index].category.toString() ==
+                          "2") {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            color: Colors.cyan,
+                            elevation: 10,
+                            child: ListTile(
+                              title: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  snapshot.data[index].textValue.toString(),
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              leading: CircleAvatar(
+                                radius: 30,
+                              ),
+                              trailing: Column(
+                                children: <Widget>[],
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: labels2.map((s) {
+                                        return Flexible(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Radio(
+                                                groupValue: attendance[
+                                                    snapshot.data[index].id],
+                                                value: s,
+                                                onChanged: (newValue) {
+                                                  setState(() {
+                                                    print(snapshot.data[index]
+                                                            .textValue
+                                                            .toString() +
+                                                        " value" +
+                                                        newValue.toString());
+                                                    attendance[snapshot
+                                                            .data[index].id
+                                                            .toString()] =
+                                                        newValue.toString();
+                                                    String result;
+                                                    final now =
+                                                        new DateTime.now();
+                                                    String formatter =
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(now);
+                                                    DBHelper.getDate(formatter
+                                                            .toString())
+                                                        .then((res) {
+                                                      result = res.toString();
+                                                      print(result);
+                                                      if (result == '[]') {
+                                                        print(snapshot
+                                                                .data[index]
+                                                                .dbValue
+                                                                .toString() +
+                                                            " Index" +
+                                                            index.toString());
+                                                        DBHelper.saveStats(
+                                                            snapshot.data[index]
+                                                                .dbValue
+                                                                .toString(),
+                                                            newValue
+                                                                .toString());
+                                                      } else if (result !=
+                                                          '[]') {
+                                                        print(snapshot
+                                                                .data[index]
+                                                                .dbValue
+                                                                .toString() +
+                                                            " Index" +
+                                                            index.toString());
+                                                        DBHelper.updateStats(
+                                                            snapshot.data[index]
+                                                                .dbValue
+                                                                .toString(),
+                                                            newValue
+                                                                .toString());
+                                                      }
+                                                    });
+                                                  });
+                                                },
+                                              ),
+                                              Text(s,
+                                                  style: TextStyle(
+                                                      color: Colors.black))
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      return Text("Some text");
+                    })
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _displayTextInputDialog(context);
+          //_displayTextInputDialog(context);
+          DBHelper.getList();
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add),
@@ -177,12 +327,13 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class ListObject{
+class ListObject {
   String? id;
   String? textValue;
   String? dbValue;
+  String? category;
+  String? icon;
 
-  ListObject({this.id, this.textValue, this.dbValue});
+  ListObject({this.id, this.textValue, this.dbValue, this.category, this.icon});
 // can also add 'required' keyword
 }
-
