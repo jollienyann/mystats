@@ -4,131 +4,40 @@ import 'package:sam/db/database.dart';
 import '../home_page.dart';
 
 class IntroPageThree extends StatelessWidget {
+  List<ListObject> listObjects = [
+    new ListObject("1","Meal","v1","2","1"),
+    new ListObject("2","Sport","v2","2","1"),
+    new ListObject("3","Sleep","v3","1","1"),
+    new ListObject("4","Stress","v4","1","1"),
+    new ListObject("5","Mood","v5","1","1"),
+    new ListObject("6","Smoke","v6","2","1"),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      primary: false,
-      padding: const EdgeInsets.all(20),
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      crossAxisCount: 2,
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[100],
-          child: ElevatedButton.icon(
-            onPressed: () {
-              ListObject lo = new ListObject();
-              lo.textValue = "v1";
-              lo.dbValue = "Meal";
-              lo.category = "1";
-              lo.icon = "1";
-              DBHelper.saveListObject(lo);
-            },
-            icon: Icon( // <-- Icon
-              Icons.no_meals,
-              size: 24.0,
-            ),
-            label: Text('Meal'),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[200],
-          child: ElevatedButton.icon(
-            onPressed: () {
-              ListObject lo = new ListObject();
-              lo.textValue = "v2";
-              lo.dbValue = "Sport";
-              lo.category = "1";
-              lo.icon = "1";
-              DBHelper.saveListObject(lo);
-            },
-            icon: Icon( // <-- Icon
-              Icons.sports_basketball,
-              size: 24.0,
-            ),
-            label: Text('Sport'),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[300],
+
+    return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            childAspectRatio: 3 / 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20),
+        itemCount: listObjects.length,
+        itemBuilder: (BuildContext ctx, index) {
+          return Container(
+            alignment: Alignment.center,
             child: ElevatedButton.icon(
-              onPressed: () {
-                ListObject lo = new ListObject();
-                lo.textValue = "v3";
-                lo.dbValue = "Sleep";
-                lo.category = "1";
-                lo.icon = "1";
-                DBHelper.saveListObject(lo);
-              },
-              icon: Icon( // <-- Icon
-                Icons.alarm,
-                size: 24.0,
-              ),
-              label: Text('Sleep'),
-            ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[400],
-          child: ElevatedButton.icon(
-            onPressed: () {
-              ListObject lo = new ListObject();
-              lo.textValue = "v4";
-              lo.dbValue = "Stress";
-              lo.category = "1";
-              lo.icon = "1";
-              DBHelper.saveListObject(lo);
-            },
-            icon: Icon( // <-- Icon
-              Icons.warning,
-              size: 24.0,
-            ),
-            label: Text('Stress'),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[500],
-            child: ElevatedButton.icon(
-              onPressed: () {
-                ListObject lo = new ListObject();
-                lo.textValue = "v5";
-                lo.dbValue = "Sleep";
-                lo.category = "1";
-                lo.icon = "1";
-                DBHelper.saveListObject(lo);
-              },
-              icon: Icon( // <-- Icon
-                Icons.snooze,
-                size: 24.0,
-              ),
-              label: Text('Sleep'),
-            ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[600],
-            child: ElevatedButton.icon(
-              onPressed: () {
-                ListObject lo = new ListObject();
-                lo.textValue = "v6";
-                lo.dbValue = "Mood";
-                lo.category = "1";
-                lo.icon = "1";
-                DBHelper.saveListObject(lo);
-              },
-              icon: Icon( // <-- Icon
-                Icons.mood_bad,
-                size: 24.0,
-              ),
-              label: Text('Mood'),
-            ),
-        ),
-      ],
-    );
+                onPressed: () {
+                  DBHelper.saveListObject(listObjects[index]);
+                },
+                icon: Icon( // <-- Icon
+                  Icons.sports_basketball,
+                  size: 24.0,
+                ),
+                label: Text(listObjects[index].textValue.toString()))
+            ,
+          );
+        });
   }
 
 }

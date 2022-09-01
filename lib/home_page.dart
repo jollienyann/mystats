@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:sam/db/database.dart';
 import 'package:intl/intl.dart';
@@ -58,11 +60,8 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   setState(() {
                     codeDialog = valueText;
-                    ListObject lo = new ListObject();
-                    lo.textValue = valueText;
-                    lo.dbValue = valueText.toLowerCase();
-                    lo.category = "1";
-                    lo.icon = "1";
+                    var rng = Random();
+                    ListObject lo = new ListObject((rng.nextInt(100).toString()),valueText,valueText.toLowerCase(),"1","1");
                     DBHelper.saveListObject(lo);
                     Navigator.pop(context);
                   });
@@ -334,6 +333,6 @@ class ListObject {
   String? category;
   String? icon;
 
-  ListObject({this.id, this.textValue, this.dbValue, this.category, this.icon});
+  ListObject(this.id, this.textValue, this.dbValue, this.category, this.icon);
 // can also add 'required' keyword
 }
