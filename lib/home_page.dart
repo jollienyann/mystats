@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                                       }
                                                     });
                                                   });
-                                                },
+                                                } ,
                                               ),
                                               Text(s,
                                                   style: TextStyle(
