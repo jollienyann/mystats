@@ -14,7 +14,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //https://stackoverflow.com/questions/60053914/flutter-onchanged-behaviour-in-radios-with-multiple-groups-not-working-as-expect
 
+  //For items with 5 selectable options
   List<String> labels5 = ['1', '2', '3', '4', '5'];
+  //For items with 2 selecteable options
   List<String> labels2 = ['1', '2'];
 
   //Create attendance list to hold attendance
@@ -79,7 +81,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('MyStats')),
+      appBar: AppBar(title: Text('MyStats'),automaticallyImplyLeading: false,),
       body: FutureBuilder(
         future: DBHelper.getList(),
         builder: (context, AsyncSnapshot snapshot) {
@@ -109,8 +111,15 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.black),
                                 ),
                               ),
-                              leading: CircleAvatar(
-                                radius: 30,
+                              leading: Container(
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.blue,
+                                ),
+                                child: Icon(IconData(int.parse(snapshot.data[index].icon.toString()), fontFamily: 'MaterialIcons')),
+                                alignment: Alignment.center,
                               ),
                               trailing: Column(
                                 children: <Widget>[],
@@ -121,65 +130,30 @@ class _HomePageState extends State<HomePage> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: labels5.map((s) {
                                         return Flexible(
                                           child: Column(
                                             children: <Widget>[
                                               Radio(
-                                                groupValue: attendance[
-                                                    snapshot.data[index].id],
+                                                groupValue: attendance[snapshot.data[index].id],
                                                 value: s,
                                                 onChanged: (newValue) {
                                                   setState(() {
-                                                    print(snapshot.data[index]
-                                                            .textValue
-                                                            .toString() +
-                                                        " value" +
-                                                        newValue.toString());
-                                                    attendance[snapshot
-                                                            .data[index].id
-                                                            .toString()] =
-                                                        newValue.toString();
+                                                    print(snapshot.data[index].textValue.toString() + " value" + newValue.toString());
+                                                    attendance[snapshot.data[index].id.toString()] = newValue.toString();
                                                     String result;
-                                                    final now =
-                                                        new DateTime.now();
-                                                    String formatter =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(now);
-                                                    DBHelper.getDate(formatter
-                                                            .toString())
-                                                        .then((res) {
+                                                    final now = new DateTime.now();
+                                                    String formatter = DateFormat('yyyy-MM-dd').format(now);
+                                                    DBHelper.getDate(formatter.toString()).then((res) {
                                                       result = res.toString();
                                                       print(result);
                                                       if (result == '[]') {
-                                                        print(snapshot
-                                                                .data[index]
-                                                                .dbValue
-                                                                .toString() +
-                                                            " Index" +
-                                                            index.toString());
-                                                        DBHelper.saveStats(
-                                                            snapshot.data[index]
-                                                                .dbValue
-                                                                .toString(),
-                                                            newValue
-                                                                .toString());
-                                                      } else if (result !=
-                                                          '[]') {
-                                                        print(snapshot
-                                                                .data[index]
-                                                                .dbValue
-                                                                .toString() +
-                                                            " Index" +
-                                                            index.toString());
-                                                        DBHelper.updateStats(
-                                                            snapshot.data[index]
-                                                                .dbValue
-                                                                .toString(),
-                                                            newValue
-                                                                .toString());
+                                                        print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
+                                                        DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      } else if (result != '[]') {
+                                                        print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
+                                                        DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
                                                       }
                                                     });
                                                   });
@@ -199,8 +173,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         );
-                      } else if (snapshot.data[index].category.toString() ==
-                          "2") {
+                      } else if (snapshot.data[index].category.toString() == "2") {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
@@ -217,8 +190,15 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.black),
                                 ),
                               ),
-                              leading: CircleAvatar(
-                                radius: 30,
+                              leading: Container(
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.blue,
+                                ),
+                                child: Icon(IconData(int.parse(snapshot.data[index].icon.toString()), fontFamily: 'MaterialIcons')),
+                                alignment: Alignment.center,
                               ),
                               trailing: Column(
                                 children: <Widget>[],
@@ -229,65 +209,30 @@ class _HomePageState extends State<HomePage> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: labels2.map((s) {
                                         return Flexible(
                                           child: Column(
                                             children: <Widget>[
                                               Radio(
-                                                groupValue: attendance[
-                                                    snapshot.data[index].id],
+                                                groupValue: attendance[snapshot.data[index].id],
                                                 value: s,
                                                 onChanged: (newValue) {
                                                   setState(() {
-                                                    print(snapshot.data[index]
-                                                            .textValue
-                                                            .toString() +
-                                                        " value" +
-                                                        newValue.toString());
-                                                    attendance[snapshot
-                                                            .data[index].id
-                                                            .toString()] =
-                                                        newValue.toString();
+                                                    print(snapshot.data[index].textValue.toString() + " value" + newValue.toString());
+                                                    attendance[snapshot.data[index].id.toString()] = newValue.toString();
                                                     String result;
-                                                    final now =
-                                                        new DateTime.now();
-                                                    String formatter =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(now);
-                                                    DBHelper.getDate(formatter
-                                                            .toString())
-                                                        .then((res) {
+                                                    final now = new DateTime.now();
+                                                    String formatter = DateFormat('yyyy-MM-dd').format(now);
+                                                    DBHelper.getDate(formatter.toString()).then((res) {
                                                       result = res.toString();
                                                       print(result);
                                                       if (result == '[]') {
-                                                        print(snapshot
-                                                                .data[index]
-                                                                .dbValue
-                                                                .toString() +
-                                                            " Index" +
-                                                            index.toString());
-                                                        DBHelper.saveStats(
-                                                            snapshot.data[index]
-                                                                .dbValue
-                                                                .toString(),
-                                                            newValue
-                                                                .toString());
-                                                      } else if (result !=
-                                                          '[]') {
-                                                        print(snapshot
-                                                                .data[index]
-                                                                .dbValue
-                                                                .toString() +
-                                                            " Index" +
-                                                            index.toString());
-                                                        DBHelper.updateStats(
-                                                            snapshot.data[index]
-                                                                .dbValue
-                                                                .toString(),
-                                                            newValue
-                                                                .toString());
+                                                        print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
+                                                        DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      } else if (result != '[]') {
+                                                        print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
+                                                        DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
                                                       }
                                                     });
                                                   });
