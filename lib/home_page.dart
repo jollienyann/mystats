@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sam/db/database.dart';
 import 'package:intl/intl.dart';
+import 'package:sam/stats_screens/graphs.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -81,7 +82,20 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('MyStats'),automaticallyImplyLeading: false,),
+      appBar: AppBar(
+        title: Text('MyStats'),
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          FlatButton(
+            textColor: Colors.white,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Graphs()));
+            },
+            child: Text("Stats"),
+            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+          ),
+        ],
+      ),
       body: FutureBuilder(
         future: DBHelper.getList(),
         builder: (context, AsyncSnapshot snapshot) {
