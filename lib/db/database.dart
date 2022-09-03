@@ -40,7 +40,6 @@ class DBHelper {
             " v9 TEXT )");
     await db.execute(
         "CREATE TABLE ListObject("
-            " id INTEGER PRIMARY KEY,"
             " textValue TEXT,"
             " dbValue TEXT,"
             " category TEXT,"
@@ -57,7 +56,7 @@ class DBHelper {
     var dbClient = await db();
     await dbClient.transaction((txn) async {
       return await txn.rawInsert(
-          'INSERT INTO ListObject (textValue,dbValue,category,icon)VALUES($toInsert,$value,$category,$icon)');
+          'INSERT INTO ListObject (textValue,dbValue,category,icon)VALUES("$toInsert","$value","$category","$icon")');
     });
   }
 
@@ -97,10 +96,11 @@ class DBHelper {
     // Convert the List<Map<String, dynamic> into a List<Recipe>.
     return List.generate(maps.length, (i) {
       return ListObject(
-        textValue: maps[i]['textValue'],
-        dbValue: maps[i]['dbValue'],
-        category: maps[i]['category'],
-        icon: maps[i]['icon']
+        maps[i]["id"],
+        maps[i]['textValue'],
+        maps[i]['dbValue'],
+        maps[i]['category'],
+        maps[i]['icon']
         // Same for the other properties
       );
     });
