@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sam/db/database.dart';
 import 'package:intl/intl.dart';
+import 'package:sam/screens/add_newObject.dart';
 import 'package:sam/stats_screens/graphs.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,51 +30,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   TextEditingController _textFieldController = TextEditingController();
-
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('TextField in Dialog'),
-            content: TextField(
-              onChanged: (value) {
-                setState(() {
-                  valueText = value;
-                });
-              },
-              controller: _textFieldController,
-              decoration: InputDecoration(hintText: "Text Field in Dialog"),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
-                child: Text('CANCEL'),
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
-                child: Text('OK'),
-                onPressed: () {
-                  setState(() {
-                    codeDialog = valueText;
-                    var rng = Random();
-                    ListObject lo = new ListObject((rng.nextInt(100).toString()),valueText,valueText.toLowerCase(),"1","1");
-                    DBHelper.saveListObject(lo);
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-            ],
-          );
-        });
-  }
 
   String codeDialog = "";
   String valueText = "";
@@ -275,8 +231,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //_displayTextInputDialog(context);
-          DBHelper.getList();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add),
