@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      if (snapshot.data[index].category.toString() == "1") {
+                      if (snapshot.data[index].category.toString() == "1" && snapshot.data[index].doneToday.toString() == "0") {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
@@ -121,9 +121,13 @@ class _HomePageState extends State<HomePage> {
                                                       if (result == '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                        DBHelper.updateObject(snapshot.data[index].dbValue.toString());
+                                                        snapshot.data.removeAt(index);
                                                       } else if (result != '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                        DBHelper.updateObject(snapshot.data[index].dbValue.toString());
+                                                        snapshot.data.removeAt(index);
                                                       }
                                                     });
                                                   });
@@ -143,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         );
-                      } else if (snapshot.data[index].category.toString() == "2") {
+                      } else if (snapshot.data[index].category.toString() == "2" && snapshot.data[index].doneToday.toString() == "0") {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
@@ -200,9 +204,13 @@ class _HomePageState extends State<HomePage> {
                                                       if (result == '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                        DBHelper.updateObject(snapshot.data[index].dbValue.toString());
+                                                        snapshot.data.removeAt(index);
                                                       } else if (result != '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                        DBHelper.updateObject(snapshot.data[index].dbValue.toString());
+                                                        snapshot.data.removeAt(index);
                                                       }
                                                     });
                                                   });
@@ -223,7 +231,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       }
-                      return Text("Some text");
+                      return Text("");
                     })
             );
           }
@@ -246,7 +254,8 @@ class ListObject {
   String? dbValue;
   String? category;
   String? icon;
+  String? doneToday;
 
-  ListObject(this.id, this.textValue, this.dbValue, this.category, this.icon);
+  ListObject(this.id, this.textValue, this.dbValue, this.category, this.icon, this.doneToday);
 // can also add 'required' keyword
 }

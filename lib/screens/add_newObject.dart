@@ -60,7 +60,7 @@ class _AddObjectState extends State<AddObject> {
             ElevatedButton(
                 onPressed: () {
                   print("Value from category"+newValue);
-                  DBHelper.saveListObject(new ListObject("44", itemController.text, "v100", newValue, "0xee29"));
+                  DBHelper.saveListObject(new ListObject("44", itemController.text, "v100", newValue, "0xee29","0"));
                 },
                 child: Text("SaveValues"))
           ],
