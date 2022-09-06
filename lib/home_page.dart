@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sam/db/database.dart';
 import 'package:intl/intl.dart';
+import 'package:sam/screens/add_newObject.dart';
 import 'package:sam/stats_screens/graphs.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,57 +31,21 @@ class _HomePageState extends State<HomePage> {
 
   TextEditingController _textFieldController = TextEditingController();
 
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('TextField in Dialog'),
-            content: TextField(
-              onChanged: (value) {
-                setState(() {
-                  valueText = value;
-                });
-              },
-              controller: _textFieldController,
-              decoration: InputDecoration(hintText: "Text Field in Dialog"),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
-                child: Text('CANCEL'),
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
-                child: Text('OK'),
-                onPressed: () {
-                  setState(() {
-                    codeDialog = valueText;
-                    var rng = Random();
-                    ListObject lo = new ListObject((rng.nextInt(100).toString()),valueText,valueText.toLowerCase(),"1","1");
-                    DBHelper.saveListObject(lo);
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-            ],
-          );
-        });
-  }
-
   String codeDialog = "";
   String valueText = "";
   int iconCode = 0;
 
+
+
   @override
   Widget build(BuildContext context) {
+    String dateFromDb = DBHelper.getLastDate().toString();
+    String formatter = DateFormat('yyyy-MM-dd').format(new DateTime.now());
+    if(dateFromDb != formatter){
+      for(int i = 0 ; i < 10; i++){
+
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('MyStats'),
@@ -108,7 +73,10 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      if (snapshot.data[index].category.toString() == "1") {
+                      if(snapshot.data[index].doneDate.toString() != formatter){
+                        DBHelper.updateObject("0",formatter,snapshot.data[index].dbValue.toString());
+                      }
+                      if (snapshot.data[index].category.toString() == "1" && snapshot.data[index].doneToday.toString() == "0") {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
@@ -165,9 +133,13 @@ class _HomePageState extends State<HomePage> {
                                                       if (result == '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
+                                                        snapshot.data.removeAt(index);
                                                       } else if (result != '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
+                                                        snapshot.data.removeAt(index);
                                                       }
                                                     });
                                                   });
@@ -187,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         );
-                      } else if (snapshot.data[index].category.toString() == "2") {
+                      } else if (snapshot.data[index].category.toString() == "2" && snapshot.data[index].doneToday.toString() == "0") {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
@@ -244,9 +216,13 @@ class _HomePageState extends State<HomePage> {
                                                       if (result == '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
+                                                        snapshot.data.removeAt(index);
                                                       } else if (result != '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
+                                                        snapshot.data.removeAt(index);
                                                       }
                                                     });
                                                   });
@@ -267,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       }
-                      return Text("Some text");
+                      return Text("");
                     })
             );
           }
@@ -275,8 +251,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //_displayTextInputDialog(context);
-          DBHelper.getList();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add),
@@ -291,7 +266,9 @@ class ListObject {
   String? dbValue;
   String? category;
   String? icon;
+  String? doneToday;
+  String? doneDate;
 
-  ListObject(this.id, this.textValue, this.dbValue, this.category, this.icon);
+  ListObject(this.id, this.textValue, this.dbValue, this.category, this.icon, this.doneToday, this.doneDate);
 // can also add 'required' keyword
 }

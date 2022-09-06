@@ -10,12 +10,12 @@ class IntroPageThree extends StatefulWidget {
 
 class _IntroPageThree extends State<IntroPageThree> {
   List<ListObject> listObjects = [
-    new ListObject("1","Meal","v1","2","0xe43b"),
-    new ListObject("2","Sport","v2","2","0xe5e6"),
-    new ListObject("3","Sleep","v3","1","0xe065"),
-    new ListObject("4","Stress","v4","1","0xe6cc"),
-    new ListObject("5","Mood","v5","1","0xe3fe"),
-    new ListObject("6","Smoke","v6","2","0xe5c7"),
+    new ListObject("1","Meal","v1","2","0xe43b","0",null),
+    new ListObject("2","Sport","v2","2","0xe5e6","0",null),
+    new ListObject("3","Sleep","v3","1","0xe065","0",null),
+    new ListObject("4","Stress","v4","1","0xe6cc","0",null),
+    new ListObject("5","Mood","v5","1","0xe3fe","0",null),
+    new ListObject("6","Smoke","v6","2","0xe5c7","0",null),
   ];
 
   @override
