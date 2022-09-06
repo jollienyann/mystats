@@ -46,7 +46,8 @@ class DBHelper {
             " dbValue TEXT,"
             " category TEXT,"
             " icon TEXT,"
-            " doneToday TEXT)");
+            " doneToday TEXT,"
+            " doneDate TEXT)");
     print("Tables created");
   }
 
@@ -95,6 +96,12 @@ class DBHelper {
     return await dbClient.rawQuery('SELECT createdAt FROM Stats WHERE createdAt like ?',[date+"%"]);
   }
 
+  //Gest last insert
+  static Future<dynamic> getLastDate() async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('SELECT createdAt FROM Stats WHERE Id = (SELECT MAX(Id) FROM Stats)');
+  }
+
   //Get list of object
   static Future<List<ListObject>> getList() async {
     // Get a reference to the database.
@@ -111,18 +118,19 @@ class DBHelper {
         maps[i]['dbValue'],
         maps[i]['category'],
         maps[i]['icon'],
-        maps[i]['doneToday']
+        maps[i]['doneToday'],
+        maps[i]['doneDate']
         // Same for the other properties
       );
     });
   }
 
   //Update daily done
-  static Future<void> updateObject(String toUpdate) async {
+  static Future<void> updateObject(String value,String date,String toUpdate) async {
     var dbClient = await db();
     await dbClient.transaction((txn) async {
       return await txn.rawUpdate(
-          'UPDATE ListObject SET doneToday = "1" Where dbValue = "$toUpdate"');
+          'UPDATE ListObject SET doneToday = "${value}", doneDate = "${date}" Where dbValue = "$toUpdate"');
     });
   }
 

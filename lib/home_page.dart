@@ -35,8 +35,17 @@ class _HomePageState extends State<HomePage> {
   String valueText = "";
   int iconCode = 0;
 
+
+
   @override
   Widget build(BuildContext context) {
+    String dateFromDb = DBHelper.getLastDate().toString();
+    String formatter = DateFormat('yyyy-MM-dd').format(new DateTime.now());
+    if(dateFromDb != formatter){
+      for(int i = 0 ; i < 10; i++){
+
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('MyStats'),
@@ -64,6 +73,9 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
+                      if(snapshot.data[index].doneDate.toString() != formatter){
+                        DBHelper.updateObject("0",formatter,snapshot.data[index].dbValue.toString());
+                      }
                       if (snapshot.data[index].category.toString() == "1" && snapshot.data[index].doneToday.toString() == "0") {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -121,12 +133,12 @@ class _HomePageState extends State<HomePage> {
                                                       if (result == '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
-                                                        DBHelper.updateObject(snapshot.data[index].dbValue.toString());
+                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                         snapshot.data.removeAt(index);
                                                       } else if (result != '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
-                                                        DBHelper.updateObject(snapshot.data[index].dbValue.toString());
+                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                         snapshot.data.removeAt(index);
                                                       }
                                                     });
@@ -204,12 +216,12 @@ class _HomePageState extends State<HomePage> {
                                                       if (result == '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
-                                                        DBHelper.updateObject(snapshot.data[index].dbValue.toString());
+                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                         snapshot.data.removeAt(index);
                                                       } else if (result != '[]') {
                                                         print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
                                                         DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
-                                                        DBHelper.updateObject(snapshot.data[index].dbValue.toString());
+                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                         snapshot.data.removeAt(index);
                                                       }
                                                     });
@@ -255,7 +267,8 @@ class ListObject {
   String? category;
   String? icon;
   String? doneToday;
+  String? doneDate;
 
-  ListObject(this.id, this.textValue, this.dbValue, this.category, this.icon, this.doneToday);
+  ListObject(this.id, this.textValue, this.dbValue, this.category, this.icon, this.doneToday, this.doneDate);
 // can also add 'required' keyword
 }

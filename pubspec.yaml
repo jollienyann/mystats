@@ -37,6 +37,8 @@ dependencies:
   introduction_screen: ^3.0.2
   smooth_page_indicator: ^1.0.0+2
   shared_preferences: ^2.0.15
+  fl_chart: ^0.55.1
+  pie_chart: ^5.3.2
 
 dev_dependencies:
   flutter_test:
