@@ -122,21 +122,22 @@ class _HomePageState extends State<HomePage> {
                                                 value: s,
                                                 onChanged: (newValue) {
                                                   setState(() {
-                                                    print(snapshot.data[index].textValue.toString() + " value" + newValue.toString());
                                                     attendance[snapshot.data[index].id.toString()] = newValue.toString();
                                                     String result;
                                                     final now = new DateTime.now();
                                                     String formatter = DateFormat('yyyy-MM-dd').format(now);
                                                     DBHelper.getDate(formatter.toString()).then((res) {
                                                       result = res.toString();
-                                                      print(result);
+                                                      print("RESULT"+result);
                                                       if (result == '[]') {
-                                                        print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
+                                                        print("Save");
+                                                        print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
                                                         DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
                                                         DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                         snapshot.data.removeAt(index);
                                                       } else if (result != '[]') {
-                                                        print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
+                                                        print("Update");
+                                                        print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
                                                         DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
                                                         DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                         snapshot.data.removeAt(index);
@@ -205,7 +206,6 @@ class _HomePageState extends State<HomePage> {
                                                 value: s,
                                                 onChanged: (newValue) {
                                                   setState(() {
-                                                    print(snapshot.data[index].textValue.toString() + " value" + newValue.toString());
                                                     attendance[snapshot.data[index].id.toString()] = newValue.toString();
                                                     String result;
                                                     final now = new DateTime.now();
@@ -214,12 +214,14 @@ class _HomePageState extends State<HomePage> {
                                                       result = res.toString();
                                                       print(result);
                                                       if (result == '[]') {
-                                                        print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
+                                                        print("Save");
+                                                        print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
                                                         DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
                                                         DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                         snapshot.data.removeAt(index);
                                                       } else if (result != '[]') {
-                                                        print(snapshot.data[index].dbValue.toString() + " Index" + index.toString());
+                                                        print("Update");
+                                                        print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
                                                         DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
                                                         DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                         snapshot.data.removeAt(index);

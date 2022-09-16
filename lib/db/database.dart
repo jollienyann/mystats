@@ -139,19 +139,20 @@ class DBHelper {
     return await dbClient.rawQuery('Select Count(*) as "length" from ListObject where category = "2"');
   }
 
-  static Future<dynamic> getItemsCategoryTwo() async {
+  static Future getItemsCategoryTwo() async {
     var dbClient = await db();
-    return await dbClient.rawQuery('select DISTINCT(Select dbValue from ListObject where category =2) as "Category2" from Stats');
+    List<Map> result =  await dbClient.rawQuery('select dbValue from ListObject where category = 2');
+    return result;
   }
 
   static Future<dynamic> getDataCategoryTwo(String dbValue) async {
     var dbClient = await db();
-    return await dbClient.rawQuery('Select Count(v6) as "Stats" from Stats where "${dbValue}" = 2 UNION Select Count(v6) from Stats where "${dbValue}" = 1');
+    return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 2 UNION Select Count("${dbValue}") from Stats where "${dbValue}" = 1');
   }
 
   static Future<dynamic> getTitleCategry2(String dbValue) async {
     var dbClient = await db();
-    return await dbClient.rawQuery('Select Count(v6) as "Stats" from Stats where "${dbValue}" = 2 UNION Select Count(v6) from Stats where "${dbValue}" = 1');
+    return await dbClient.rawQuery('Select textValue from ListObject where dbValue = "${dbValue}"');
   }
 
 
