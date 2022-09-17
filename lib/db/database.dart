@@ -134,5 +134,28 @@ class DBHelper {
     });
   }
 
+  static Future<dynamic> getLengthCategoryTwo() async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('Select Count(*) as "length" from ListObject where category = "2"');
+  }
+
+  static Future getItemsCategoryTwo() async {
+    var dbClient = await db();
+    List<Map> result =  await dbClient.rawQuery('select dbValue from ListObject where category = 2');
+    return result;
+  }
+
+  static Future<dynamic> getDataCategoryTwo(String dbValue) async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 2 UNION Select Count("${dbValue}") from Stats where "${dbValue}" = 1');
+  }
+
+  static Future<dynamic> getTitleCategry2(String dbValue) async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('Select textValue from ListObject where dbValue = "${dbValue}"');
+  }
+
+
+
 
 }
