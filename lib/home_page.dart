@@ -16,13 +16,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //https://stackoverflow.com/questions/60053914/flutter-onchanged-behaviour-in-radios-with-multiple-groups-not-working-as-expect
 
+  //Future to get list from db
+  late Future? _myList;
+
   //For items with 5 selectable options
   List<String> labels5 = ['1', '2', '3', '4', '5'];
   //For items with 2 selecteable options
   List<String> labels2 = ['1', '2'];
-
-  //Create attendance list to hold attendance
-  Map<String, String> attendance = {};
 
   //Define you function that takes click
   void _onClick(String value) {
@@ -35,17 +35,16 @@ class _HomePageState extends State<HomePage> {
   String valueText = "";
   int iconCode = 0;
 
-
+  //Getting list from db in init state to prevent reloading multiple times
+  @override
+  void initState() {
+    super.initState();
+    _myList = _fetchList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String dateFromDb = DBHelper.getLastDate().toString();
     String formatter = DateFormat('yyyy-MM-dd').format(new DateTime.now());
-    if(dateFromDb != formatter){
-      for(int i = 0 ; i < 10; i++){
-
-      }
-    }
     return Scaffold(
       appBar: AppBar(
         title: Text('MyStats'),
@@ -62,10 +61,10 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: FutureBuilder(
-        future: DBHelper.getList(),
+        future: _myList,
         builder: (context, AsyncSnapshot snapshot) {
           if (!snapshot.hasData) {
-            print("no data");
+            print(snapshot.error);
             return Container();
           } else {
             return Container(
@@ -118,37 +117,34 @@ class _HomePageState extends State<HomePage> {
                                           child: Column(
                                             children: <Widget>[
                                               Radio(
-                                                groupValue: attendance[snapshot.data[index].id],
+                                                groupValue: snapshot.data[index].id,
                                                 value: s,
                                                 onChanged: (newValue) {
+                                                  String result;
+                                                  final now = new DateTime.now();
+                                                  String formatter = DateFormat('yyyy-MM-dd').format(now);
+                                                  DBHelper.getDate(formatter.toString()).then((res) {
+                                                    result = res.toString();
+                                                    print("RESULT"+result);
+                                                    if (result == '[]') {
+                                                      print("Save");
+                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
+                                                      DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
+                                                    } else if (result != '[]') {
+                                                      print("Update");
+                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
+                                                      DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
+                                                    }
                                                   setState(() {
-                                                    attendance[snapshot.data[index].id.toString()] = newValue.toString();
-                                                    String result;
-                                                    final now = new DateTime.now();
-                                                    String formatter = DateFormat('yyyy-MM-dd').format(now);
-                                                    DBHelper.getDate(formatter.toString()).then((res) {
-                                                      result = res.toString();
-                                                      print("RESULT"+result);
-                                                      if (result == '[]') {
-                                                        print("Save");
-                                                        print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
-                                                        DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
-                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
-                                                        snapshot.data.removeAt(index);
-                                                      } else if (result != '[]') {
-                                                        print("Update");
-                                                        print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
-                                                        DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
-                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
-                                                        snapshot.data.removeAt(index);
-                                                      }
+                                                    snapshot.data.removeAt(index);
                                                     });
                                                   });
                                                 },
                                               ),
                                               Text(s,
-                                                  style: TextStyle(
-                                                      color: Colors.black))
+                                                  style: TextStyle(color: Colors.black))
                                             ],
                                           ),
                                         );
@@ -202,30 +198,28 @@ class _HomePageState extends State<HomePage> {
                                           child: Column(
                                             children: <Widget>[
                                               Radio(
-                                                groupValue: attendance[snapshot.data[index].id],
+                                                groupValue: snapshot.data[index].id,
                                                 value: s,
                                                 onChanged: (newValue) {
+                                                  String result;
+                                                  final now = new DateTime.now();
+                                                  String formatter = DateFormat('yyyy-MM-dd').format(now);
+                                                  DBHelper.getDate(formatter.toString()).then((res) {
+                                                    result = res.toString();
+                                                    print(result);
+                                                    if (result == '[]') {
+                                                      print("Save");
+                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
+                                                      DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
+                                                    } else if (result != '[]') {
+                                                      print("Update");
+                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
+                                                      DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
+                                                    }
                                                   setState(() {
-                                                    attendance[snapshot.data[index].id.toString()] = newValue.toString();
-                                                    String result;
-                                                    final now = new DateTime.now();
-                                                    String formatter = DateFormat('yyyy-MM-dd').format(now);
-                                                    DBHelper.getDate(formatter.toString()).then((res) {
-                                                      result = res.toString();
-                                                      print(result);
-                                                      if (result == '[]') {
-                                                        print("Save");
-                                                        print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
-                                                        DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
-                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
-                                                        snapshot.data.removeAt(index);
-                                                      } else if (result != '[]') {
-                                                        print("Update");
-                                                        print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
-                                                        DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
-                                                        DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
-                                                        snapshot.data.removeAt(index);
-                                                      }
+                                                    snapshot.data.removeAt(index);
                                                     });
                                                   });
                                                 } ,
@@ -260,6 +254,12 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+Future? _fetchList() async {
+  var result = await DBHelper.getList();
+  print(result);
+  return result;
 }
 
 class ListObject {
