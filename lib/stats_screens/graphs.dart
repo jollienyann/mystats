@@ -81,7 +81,7 @@ class _GraphsState extends State<Graphs> {
                 legend: Legend(isVisible: true,borderColor: Colors.black, borderWidth: 2),
                 series: <CircularSeries>[
                   // Render pie chart
-                  PieSeries<ChartData, String>(
+                  PieSeries<ChartData, String>( 
                       dataSource: chartData,
                       pointColorMapper:(ChartData data,  _) => data.color,
                       xValueMapper: (ChartData data, _) => data.x,

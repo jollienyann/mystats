@@ -158,7 +158,7 @@ class DBHelper {
 
   static Future<dynamic> getDataCategoryOne(String dbValue) async {
     var dbClient = await db();
-    return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 3 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 4 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 5');
+    return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 3 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 4 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 5');
   }
 
 }

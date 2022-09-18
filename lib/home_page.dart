@@ -249,13 +249,13 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton:Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FloatingActionButton(heroTag: "btn1", child: const Icon(Icons.add), onPressed: (){
+            RaisedButton(child: const Icon(Icons.add), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
             }),
-            FloatingActionButton(heroTag: "btn2",child: Text('Stats'), onPressed: (){
+            RaisedButton(child: Text('Stats'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => Graphs()));
             }),
-            FloatingActionButton(heroTag: "btn3",child: Text('Stats2'), onPressed: (){
+            RaisedButton(child: Text('Stats2'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => GraphsOne()));
             }),
           ]

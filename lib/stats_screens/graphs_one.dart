@@ -109,6 +109,7 @@ class _GraphsOneState extends State<GraphsOne> {
     List<DataOne> values = [];
     for(int i = 0 ; i < result.length; i++){
       var valuesStats = await DBHelper.getDataCategoryOne(result[i]['dbValue'].toString());
+      print(valuesStats[0]['Stats'].toString()+" "+valuesStats[1]['Stats'].toString()+" "+valuesStats[2]['Stats'].toString()+" "+valuesStats[3]['Stats'].toString()+" "+valuesStats[4]['Stats'].toString());
       values.add(DataOne(result[i]['dbValue'],result[i]['textValue'],valuesStats[0]['Stats'].toString(),valuesStats[1]['Stats'].toString(),valuesStats[2]['Stats'].toString(),valuesStats[3]['Stats'].toString(),valuesStats[4]['Stats'].toString()));
       //values.add();
     }
