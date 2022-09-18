@@ -5,6 +5,7 @@ import 'package:sam/db/database.dart';
 import 'package:intl/intl.dart';
 import 'package:sam/screens/add_newObject.dart';
 import 'package:sam/stats_screens/graphs.dart';
+import 'package:sam/stats_screens/graphs_one.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -245,12 +246,19 @@ class _HomePageState extends State<HomePage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
-        },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
+      floatingActionButton:Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RaisedButton(child: const Icon(Icons.add), onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
+            }),
+            RaisedButton(child: Text('Stats'), onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Graphs()));
+            }),
+            RaisedButton(child: Text('Stats2'), onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => GraphsOne()));
+            }),
+          ]
       ),
     );
   }
