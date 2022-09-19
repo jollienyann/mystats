@@ -1,45 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:sam/db/database.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class GraphsOne extends StatefulWidget {
+class GraphsTwo extends StatefulWidget {
 
   @override
-  State<GraphsOne> createState() => _GraphsOneState();
+  State<GraphsTwo> createState() => _GraphsTwoState();
 }
 
-class _GraphsOneState extends State<GraphsOne> {
+class _GraphsTwoState extends State<GraphsTwo> {
   List<ChartData> chartData = [
-    ChartData(1, 0),
-    ChartData(2, 0),
-    ChartData(3, 0),
-    ChartData(4, 0),
-    ChartData(5, 0)
+    ChartData('Yes', 0),
+    ChartData('No', 0)
   ];
-
-  late Future? _myStringOne;
+  late Future? _myString;
   bool show = false;
   int category = 0;
   // Initial Selected Value
   String dropdownvalue = '';
   String value1="";
   String value2="";
-  String value3="";
-  String value4="";
-  String value5="";
 
   int index = 0;
 
   @override
   void initState() {
     super.initState();
-    _myStringOne = _fetchDataCategoryOne();
+    _myString = _fetchDataCategoryTwo();
   }
 
   @override
   Widget build(BuildContext context) {
     List<String> items = [];
+    List<String> itemsOne = [];
     return Scaffold(
       appBar: AppBar(
         title: Text('Stats'),
@@ -49,7 +44,7 @@ class _GraphsOneState extends State<GraphsOne> {
           child: Column(
             children: [
               FutureBuilder(
-                  future: _myStringOne,
+                  future: _myString,
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       for(int i = 0 ; i < snapshot.data.length ; i++){
@@ -68,18 +63,10 @@ class _GraphsOneState extends State<GraphsOne> {
                             index = items.indexOf(newValue.toString());
                             value1 = snapshot.data[index].valuesStats1;
                             value2 = snapshot.data[index].valuesStats2;
-                            value3 = snapshot.data[index].valuesStats3;
-                            value4 = snapshot.data[index].valuesStats4;
-                            value5 = snapshot.data[index].valuesStats5;
-
                             chartData = [
-                              ChartData(1, double.parse(value1)),
-                              ChartData(2, double.parse(value2)),
-                              ChartData(3, double.parse(value3)),
-                              ChartData(4, double.parse(value4)),
-                              ChartData(5, double.parse(value5))
+                              ChartData('Yes', double.parse(value1)),
+                              ChartData('No', double.parse(value2))
                             ];
-
                             dropdownvalue = newValue!;
                           });
                         },
@@ -92,21 +79,27 @@ class _GraphsOneState extends State<GraphsOne> {
                 dropdownvalue,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              show ? SfCartesianChart(
-                  series: <ChartSeries<ChartData, int>>[
-                    // Renders column chart
-                    ColumnSeries<ChartData, int>(
+              show ? SfCircularChart(
+                  legend: Legend(isVisible: true,borderColor: Colors.black, borderWidth: 2),
+                  series: <CircularSeries>[
+                    // Render pie chart
+                    PieSeries<ChartData, String>( 
                         dataSource: chartData,
+                        pointColorMapper:(ChartData data,  _) => data.color,
                         xValueMapper: (ChartData data, _) => data.x,
-                        yValueMapper: (ChartData data, _) => data.y
+                        yValueMapper: (ChartData data, _) => data.y,
+                        dataLabelSettings: DataLabelSettings(
+                          // Renders the data label
+                            isVisible: true
+                        )
                     )
                   ]
-              ) : const Padding(
+              ): const Padding(
                 padding: EdgeInsets.only(top: 200),
                 child: Text(
-                  "Please select item",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    "Please select item",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
               ],
@@ -116,34 +109,30 @@ class _GraphsOneState extends State<GraphsOne> {
     );
   }
 
-  Future? _fetchDataCategoryOne() async {
-    var result = await DBHelper.getItemsCategoryOne();
-    List<DataOne> values = [];
+  Future? _fetchDataCategoryTwo() async {
+    var result = await DBHelper.getItemsCategoryTwo();
+    List<Data> values = [];
     for(int i = 0 ; i < result.length; i++){
-      var valuesStats = await DBHelper.getDataCategoryOne(result[i]['dbValue'].toString());
-      print(valuesStats[0]['Stats'].toString()+" "+valuesStats[1]['Stats'].toString()+" "+valuesStats[2]['Stats'].toString()+" "+valuesStats[3]['Stats'].toString()+" "+valuesStats[4]['Stats'].toString());
-      values.add(DataOne(result[i]['dbValue'],result[i]['textValue'],valuesStats[0]['Stats'].toString(),valuesStats[1]['Stats'].toString(),valuesStats[2]['Stats'].toString(),valuesStats[3]['Stats'].toString(),valuesStats[4]['Stats'].toString()));
+      var valuesStats = await DBHelper.getDataCategoryTwo(result[i]['dbValue'].toString());
+      values.add(Data(result[i]['dbValue'],result[i]['textValue'],valuesStats[0]['Stats'].toString(),valuesStats[1]['Stats'].toString()));
       //values.add();
     }
     return values;
   }
 }
 
-class DataOne {
+class Data {
   String? dbValue;
   String? textValue;
   String? valuesStats1;
   String? valuesStats2;
-  String? valuesStats3;
-  String? valuesStats4;
-  String? valuesStats5;
 
-
-  DataOne(this.dbValue,this.textValue,this.valuesStats1,this.valuesStats2,this.valuesStats3,this.valuesStats4,this.valuesStats5);
+  Data(this.dbValue,this.textValue,this.valuesStats1,this.valuesStats2);
 }
 
 class ChartData {
-  ChartData(this.x, this.y);
-  final int x;
+  ChartData(this.x, this.y, [this.color]);
+  final String x;
   final double y;
+  final Color? color;
 }
