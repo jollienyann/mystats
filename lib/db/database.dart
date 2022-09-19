@@ -76,11 +76,11 @@ class DBHelper {
   }
 
   //Update stats if already an entry for today
-  static Future<void> updateStats(String toUpdate, String value) async {
+  static Future<void> updateStats(String toUpdate, String value,String date) async {
     var dbClient = await db();
     await dbClient.transaction((txn) async {
       return await txn.rawUpdate(
-          'UPDATE Stats SET ${toUpdate} = ?',[value]);
+          'UPDATE Stats SET "${toUpdate}" = "${value}" where createdAt like "${date}"');
     });
   }
 
@@ -125,7 +125,7 @@ class DBHelper {
     });
   }
 
-  //Update daily done
+  //Update ListObject if done today
   static Future<void> updateObject(String value,String date,String toUpdate) async {
     var dbClient = await db();
     await dbClient.transaction((txn) async {
@@ -134,28 +134,27 @@ class DBHelper {
     });
   }
 
-  static Future<dynamic> getLengthCategoryTwo() async {
-    var dbClient = await db();
-    return await dbClient.rawQuery('Select Count(*) as "length" from ListObject where category = "2"');
-  }
-
+  //Get items from category 2
   static Future getItemsCategoryTwo() async {
     var dbClient = await db();
     List<Map> result =  await dbClient.rawQuery('select dbValue, textValue from ListObject where category = 2');
     return result;
   }
 
+  //Get items from category 1
   static Future getItemsCategoryOne() async {
     var dbClient = await db();
     List<Map> result =  await dbClient.rawQuery('select dbValue, textValue from ListObject where category = 1');
     return result;
   }
 
+  //Get data from items category 2
   static Future<dynamic> getDataCategoryTwo(String dbValue) async {
     var dbClient = await db();
     return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 1');
   }
 
+  //Get data from items category 1
   static Future<dynamic> getDataCategoryOne(String dbValue) async {
     var dbClient = await db();
     return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 3 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 4 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 5');
