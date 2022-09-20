@@ -45,7 +45,7 @@ class _IntroPageThree extends State<IntroPageThree> {
                   },
                   icon: Icon(
                     // <-- Icon
-                    Icons.sports_basketball,
+                    IconData(int.parse(listObjects[index].icon.toString()), fontFamily: 'MaterialIcons'),
                     size: 80.0,
                   ),
                   label: Text(listObjects[index].textValue.toString())),

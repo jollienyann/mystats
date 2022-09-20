@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       if(snapshot.data[index].doneDate.toString() != formatter){
-                        DBHelper.updateObject("0",formatter,snapshot.data[index].dbValue.toString());
+                        DBHelper.updateObject("0",formatter.toString(),snapshot.data[index].dbValue.toString());
                       }
                       if (snapshot.data[index].category.toString() == "1" && snapshot.data[index].doneToday.toString() == "0") {
                         return Padding(
@@ -122,12 +122,12 @@ class _HomePageState extends State<HomePage> {
                                                     print("RESULT"+result);
                                                     if (result == '[]') {
                                                       print("Save");
-                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
+                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString()+ " Date: "+formatter.toString());
                                                       DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
                                                       DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                     } else if (result != '[]') {
                                                       print("Update");
-                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
+                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString()+ " Date: "+formatter.toString());
                                                       DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString(),formatter.toString());
                                                       DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                     }
@@ -206,12 +206,12 @@ class _HomePageState extends State<HomePage> {
                                                     print(result);
                                                     if (result == '[]') {
                                                       print("Save");
-                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
+                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString()+ " Date: "+formatter.toString());
                                                       DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
                                                       DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                     } else if (result != '[]') {
                                                       print("Update");
-                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
+                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString()+ " Date: "+formatter.toString());
                                                       DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString(),formatter.toString());
                                                       DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                     }
@@ -262,7 +262,7 @@ class _HomePageState extends State<HomePage> {
 
 Future? _fetchList() async {
   var result = await DBHelper.getList();
-  print(result);
+  print(result.toString());
   return result;
 }
 
