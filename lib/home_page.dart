@@ -262,7 +262,7 @@ class _HomePageState extends State<HomePage> {
 
 Future? _fetchList() async {
   var result = await DBHelper.getList();
-  print(result);
+  print(result.toString());
   return result;
 }
 
