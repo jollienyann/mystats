@@ -80,7 +80,7 @@ class DBHelper {
     var dbClient = await db();
     await dbClient.transaction((txn) async {
       return await txn.rawUpdate(
-          'UPDATE Stats SET "${toUpdate}" = "${value}" where createdAt like "${date}"');
+          'UPDATE Stats SET "${toUpdate}" = "${value}" where createdAt like "${date}%"');
     });
   }
 

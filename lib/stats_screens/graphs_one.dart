@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sam/db/database.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import "package:intl/intl.dart";
 
 class GraphsOne extends StatefulWidget {
 
@@ -11,11 +12,11 @@ class GraphsOne extends StatefulWidget {
 
 class _GraphsOneState extends State<GraphsOne> {
   List<ChartData> chartData = [
-    ChartData(1, 0),
-    ChartData(2, 0),
-    ChartData(3, 0),
-    ChartData(4, 0),
-    ChartData(5, 0)
+    ChartData(0, 1),
+    ChartData(0, 2),
+    ChartData(0, 3),
+    ChartData(0, 4),
+    ChartData(0, 5)
   ];
 
   late Future? _myStringOne;
@@ -73,11 +74,11 @@ class _GraphsOneState extends State<GraphsOne> {
                             value5 = snapshot.data[index].valuesStats5;
 
                             chartData = [
-                              ChartData(1, double.parse(value1)),
-                              ChartData(2, double.parse(value2)),
-                              ChartData(3, double.parse(value3)),
-                              ChartData(4, double.parse(value4)),
-                              ChartData(5, double.parse(value5))
+                              ChartData(int.parse(value1),1),
+                              ChartData(int.parse(value2),2),
+                              ChartData(int.parse(value3),3),
+                              ChartData(int.parse(value4),4),
+                              ChartData(int.parse(value5),5)
                             ];
 
                             dropdownvalue = newValue!;
@@ -93,9 +94,16 @@ class _GraphsOneState extends State<GraphsOne> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               show ? SfCartesianChart(
+                  primaryYAxis: NumericAxis(
+                      numberFormat: NumberFormat.compact(),
+                      decimalPlaces: 0),
+                  primaryXAxis: NumericAxis(
+                      numberFormat: NumberFormat.compact(),
+                      decimalPlaces: 0),
                   series: <ChartSeries<ChartData, int>>[
                     // Renders column chart
                     ColumnSeries<ChartData, int>(
+                        color: Colors.orange[200],
                         dataSource: chartData,
                         xValueMapper: (ChartData data, _) => data.x,
                         yValueMapper: (ChartData data, _) => data.y
