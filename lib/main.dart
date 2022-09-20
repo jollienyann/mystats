@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) =>
       MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.orange
+        ),
         home: showHome ? HomePage() : OnBoardingScreen(),
       );
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sam/db/database.dart';
 import 'package:intl/intl.dart';
 import 'package:sam/screens/add_newObject.dart';
-import 'package:sam/stats_screens/graphs.dart';
+import 'package:sam/stats_screens/graphs_two.dart';
 import 'package:sam/stats_screens/graphs_one.dart';
 
 class HomePage extends StatefulWidget {
@@ -49,17 +49,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('MyStats'),
-        automaticallyImplyLeading: false,
-        actions: <Widget>[
-          FlatButton(
-            textColor: Colors.white,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Graphs()));
-            },
-            child: Text("Stats"),
-            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-          ),
-        ],
+        automaticallyImplyLeading: false
       ),
       body: FutureBuilder(
         future: _myList,
@@ -80,7 +70,10 @@ class _HomePageState extends State<HomePage> {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
-                            color: Colors.cyan,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40.0),
+                            ),
+                            color: Colors.orange[200],
                             elevation: 10,
                             child: ListTile(
                               title: Padding(
@@ -98,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 80,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.blue,
+                                  color: Colors.orange[400],
                                 ),
                                 child: Icon(IconData(int.parse(snapshot.data[index].icon.toString()), fontFamily: 'MaterialIcons')),
                                 alignment: Alignment.center,
@@ -135,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                                                     } else if (result != '[]') {
                                                       print("Update");
                                                       print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
-                                                      DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString(),formatter.toString());
                                                       DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                     }
                                                   setState(() {
@@ -161,7 +154,10 @@ class _HomePageState extends State<HomePage> {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
-                            color: Colors.cyan,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40.0),
+                            ),
+                            color: Colors.orange[200],
                             elevation: 10,
                             child: ListTile(
                               title: Padding(
@@ -179,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 80,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.blue,
+                                  color: Colors.orange[400],
                                 ),
                                 child: Icon(IconData(int.parse(snapshot.data[index].icon.toString()), fontFamily: 'MaterialIcons')),
                                 alignment: Alignment.center,
@@ -216,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                                                     } else if (result != '[]') {
                                                       print("Update");
                                                       print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString());
-                                                      DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString(),formatter.toString());
                                                       DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                     }
                                                   setState(() {
@@ -252,10 +248,10 @@ class _HomePageState extends State<HomePage> {
             RaisedButton(child: const Icon(Icons.add), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
             }),
-            RaisedButton(child: Text('Stats'), onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Graphs()));
+            RaisedButton(child: Text('Stats 2'), onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => GraphsTwo()));
             }),
-            RaisedButton(child: Text('Stats2'), onPressed: (){
+            RaisedButton(child: Text('Stats 1'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => GraphsOne()));
             }),
           ]

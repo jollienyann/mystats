@@ -30,7 +30,7 @@ class _AddObjectState extends State<AddObject> {
                   labelText: "Item name", //babel text
                   hintText: "Enter item name", //hint text
                   hintStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), //hint text style
-                  labelStyle: TextStyle(fontSize: 18, color: Colors.cyan), //label style
+                  labelStyle: TextStyle(fontSize: 18, color: Colors.orange), //label style
                 ),
             ),
             ListTile(
