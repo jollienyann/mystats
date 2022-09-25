@@ -7,6 +7,8 @@ import 'package:sam/screens/add_newObject.dart';
 import 'package:sam/stats_screens/graphs_two.dart';
 import 'package:sam/stats_screens/graphs_one.dart';
 
+import 'screens/Labo.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -253,6 +255,9 @@ class _HomePageState extends State<HomePage> {
             }),
             RaisedButton(child: Text('Stats 1'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => GraphsOne()));
+            }),
+            RaisedButton(child: Text('Labo'), onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Labo()));
             }),
           ]
       ),

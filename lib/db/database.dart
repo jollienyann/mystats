@@ -154,6 +154,12 @@ class DBHelper {
     return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 1');
   }
 
+  //Get data from items category 2
+  static Future<dynamic> getSum() async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('SELECT MAX(v6) from Stats');
+  }
+
   //Get data from items category 1
   static Future<dynamic> getDataCategoryOne(String dbValue) async {
     var dbClient = await db();
