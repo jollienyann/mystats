@@ -5,12 +5,19 @@ import 'package:sam/db/database.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class GraphsTwo extends StatefulWidget {
+  String dbValue;
+  String textValue;
 
+  GraphsTwo(this.dbValue,this.textValue);
   @override
-  State<GraphsTwo> createState() => _GraphsTwoState();
+  State<GraphsTwo> createState() => _GraphsTwoState(dbValue,textValue);
 }
 
 class _GraphsTwoState extends State<GraphsTwo> {
+  String dbValue;
+  String textValue;
+
+  _GraphsTwoState(this.dbValue,this.textValue);
   List<ChartData> chartData = [
     ChartData('Yes', 0),
     ChartData('No', 0)
@@ -47,60 +54,45 @@ class _GraphsTwoState extends State<GraphsTwo> {
                   future: _myString,
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
-                      for(int i = 0 ; i < snapshot.data.length ; i++){
-                        items.add(snapshot.data[i].textValue.toString());
-                      }
-                      return DropdownButton(
-                        items: items.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            show = true;
-                            index = items.indexOf(newValue.toString());
-                            value1 = snapshot.data[index].valuesStats1;
-                            value2 = snapshot.data[index].valuesStats2;
-                            chartData = [
-                              ChartData('Yes', double.parse(value1)),
-                              ChartData('No', double.parse(value2))
-                            ];
-                            dropdownvalue = newValue!;
-                          });
-                        },
+                      value1 = snapshot.data[index].valuesStats1;
+                      value2 = snapshot.data[index].valuesStats2;
+                      chartData = [
+                        ChartData('Yes', double.parse(value1)),
+                        ChartData('No', double.parse(value2))
+                      ];
+                      return Container(
+                        child: Flexible(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(20) ,
+                                child: Text( textValue,
+                                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SfCircularChart(
+                                  legend: Legend(isVisible: true,borderColor: Colors.black, borderWidth: 2),
+                                  series: <CircularSeries>[
+                                    // Render pie chart
+                                    PieSeries<ChartData, String>(
+                                        dataSource: chartData,
+                                        pointColorMapper:(ChartData data,  _) => data.color,
+                                        xValueMapper: (ChartData data, _) => data.x,
+                                        yValueMapper: (ChartData data, _) => data.y,
+                                        dataLabelSettings: DataLabelSettings(
+                                          // Renders the data label
+                                            isVisible: true
+                                        )
+                                    )
+                                  ]
+                              )
+                            ],
+                          ),
+                        ),
                       );
                     }
                     return Container();
                   }
-              ),
-              Text(
-                dropdownvalue,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              show ? SfCircularChart(
-                  legend: Legend(isVisible: true,borderColor: Colors.black, borderWidth: 2),
-                  series: <CircularSeries>[
-                    // Render pie chart
-                    PieSeries<ChartData, String>(
-                        dataSource: chartData,
-                        pointColorMapper:(ChartData data,  _) => data.color,
-                        xValueMapper: (ChartData data, _) => data.x,
-                        yValueMapper: (ChartData data, _) => data.y,
-                        dataLabelSettings: DataLabelSettings(
-                          // Renders the data label
-                            isVisible: true
-                        )
-                    )
-                  ]
-              ): const Padding(
-                padding: EdgeInsets.only(top: 200),
-                child: Text(
-                    "Please select item",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
               ),
               ],
           ),
@@ -113,7 +105,7 @@ class _GraphsTwoState extends State<GraphsTwo> {
     var result = await DBHelper.getItemsCategoryTwo();
     List<Data> values = [];
     for(int i = 0 ; i < result.length; i++){
-      var valuesStats = await DBHelper.getDataCategoryTwo(result[i]['dbValue'].toString());
+      var valuesStats = await DBHelper.getDataCategoryTwo(dbValue);
       values.add(Data(result[i]['dbValue'],result[i]['textValue'],valuesStats[0]['Stats'].toString(),valuesStats[1]['Stats'].toString()));
       //values.add();
     }

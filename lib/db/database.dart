@@ -39,7 +39,10 @@ class DBHelper {
             " v6 TEXT,"
             " v7 TEXT,"
             " v8 TEXT,"
-            " v9 TEXT )");
+            " v9 TEXT,"
+            " v10 TEXT,"
+            " v11 TEXT,"
+            " v12 TEXT )");
     await db.execute(
         "CREATE TABLE ListObject("
             " textValue TEXT,"
@@ -151,7 +154,7 @@ class DBHelper {
   //Get data from items category 2
   static Future<dynamic> getDataCategoryTwo(String dbValue) async {
     var dbClient = await db();
-    return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 1');
+    return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 0');
   }
 
   //Get data from items category 2
@@ -163,7 +166,7 @@ class DBHelper {
   //Get data from items category 1
   static Future<dynamic> getDataCategoryOne(String dbValue) async {
     var dbClient = await db();
-    return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 3 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 4 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 5');
+    return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 0 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 3 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 4');
   }
 
 }
