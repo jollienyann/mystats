@@ -25,7 +25,7 @@ class _IndexState extends State<Index> {
   Widget build(BuildContext context) {
     String formatter = DateFormat('yyyy-MM-dd').format(new DateTime.now());
     return Scaffold(
-      appBar: AppBar(title: Text('MyStats'), automaticallyImplyLeading: false),
+      appBar: AppBar(title: Text('Items')),
       body: FutureBuilder(
         future: _myList,
         builder: (context, AsyncSnapshot snapshot) {
@@ -45,28 +45,41 @@ class _IndexState extends State<Index> {
                             borderRadius: BorderRadius.circular(40.0),
                           ),
                           color: Colors.orange[200],
-                          child: ListTile(
-                            title: Padding(
-                              padding: const EdgeInsets.only(right: 20.0),
-                              child: Row(
-                                  children: [
-                                Text(
-                                  snapshot.data[index].textValue.toString(),
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    25, 25, 25, 25),
+                                child: Icon(
+                                  IconData(
+                                      int.parse(
+                                          snapshot.data[index].icon.toString()),
+                                      fontFamily: 'MaterialIcons'),
+                                  size: 50,
                                 ),
-                                    Icon(
-                                      IconData(
-                                          int.parse(snapshot.data[index].icon
-                                              .toString()),
-                                          fontFamily: 'MaterialIcons'),
-                                      size: 50,
-                                    ),
-                                Flexible(
-                                    child: FlatButton(
-                                        color: Colors.transparent,
+                              ),
+                              Text(
+                                snapshot.data[index].textValue.toString(),
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
+                              Container(
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      5, 0, 0, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.graphic_eq_sharp,
+                                          color: Colors.black,
+                                          size: 30,
+                                        ),
                                         onPressed: () {
                                           print("DATA " +
                                               snapshot.data[index].dbValue
@@ -99,20 +112,22 @@ class _IndexState extends State<Index> {
                                                             valueToPassText)));
                                           }
                                         },
-                                        child: Icon(
-                                          Icons.graphic_eq,
-                                          size: 24.0,
-                                        ))),
-                                Flexible(
-                                    child: FlatButton(
-                                        color: Colors.transparent,
-                                        onPressed: () {},
-                                        child: Icon(
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
                                           Icons.edit,
-                                          size: 24.0,
-                                        )))
-                              ]),
-                            ),
+                                          color: Colors.black,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          print('IconButton pressed ...');
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
