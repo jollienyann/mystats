@@ -16,6 +16,10 @@ class _IntroPageThree extends State<IntroPageThree> {
     new ListObject("4", "Stress", "v4", "1", "0xe6cc", "0", null),
     new ListObject("5", "Mood", "v5", "1", "0xe3fe", "0", null),
     new ListObject("6", "Smoke", "v6", "2", "0xe5c7", "0", null),
+    new ListObject("7", "Alcool", "v7", "2", "0xe391", "0", null),
+    new ListObject("8", "Screen time", "v8", "1", "0xe3ee", "0", null),
+    new ListObject("9", "Work time", "v9", "1", "0xee5d", "0", null),
+    new ListObject("10", "Water", "v10", "1", "0xe6d0", "0", null),
   ];
 
   @override

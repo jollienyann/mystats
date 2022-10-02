@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:sam/db/database.dart';
 import 'package:intl/intl.dart';
 import 'package:sam/screens/add_newObject.dart';
-import 'package:sam/stats_screens/graphs_two.dart';
-import 'package:sam/stats_screens/graphs_one.dart';
 
 import 'screens/Labo.dart';
+import 'screens/index_items.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,9 +22,9 @@ class _HomePageState extends State<HomePage> {
   late Future? _myList;
 
   //For items with 5 selectable options
-  List<String> labels5 = ['1', '2', '3', '4', '5'];
+  List<String> labels5 = ['0', '1', '2', '3', '4'];
   //For items with 2 selecteable options
-  List<String> labels2 = ['1', '2'];
+  List<String> labels2 = ['non', 'oui'];
 
   //Define you function that takes click
   void _onClick(String value) {
@@ -201,6 +200,10 @@ class _HomePageState extends State<HomePage> {
                                                 value: s,
                                                 onChanged: (newValue) {
                                                   String result;
+                                                  String toInsert = "1";
+                                                  if(newValue == "non"){
+                                                    toInsert = "0";
+                                                  }
                                                   final now = new DateTime.now();
                                                   String formatter = DateFormat('yyyy-MM-dd').format(now);
                                                   DBHelper.getDate(formatter.toString()).then((res) {
@@ -208,13 +211,12 @@ class _HomePageState extends State<HomePage> {
                                                     print(result);
                                                     if (result == '[]') {
                                                       print("Save");
-                                                      print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString()+ " Date: "+formatter.toString());
-                                                      DBHelper.saveStats(snapshot.data[index].dbValue.toString(), newValue.toString());
+                                                      DBHelper.saveStats(snapshot.data[index].dbValue.toString(), toInsert);
                                                       DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                     } else if (result != '[]') {
                                                       print("Update");
                                                       print("For: "+snapshot.data[index].dbValue.toString() + " Value" + newValue.toString()+ " Date: "+formatter.toString());
-                                                      DBHelper.updateStats(snapshot.data[index].dbValue.toString(), newValue.toString(),formatter.toString());
+                                                      DBHelper.updateStats(snapshot.data[index].dbValue.toString(),toInsert,formatter.toString());
                                                       DBHelper.updateObject("1",formatter,snapshot.data[index].dbValue.toString());
                                                     }
                                                   setState(() {
@@ -251,10 +253,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
             }),
             RaisedButton(child: Text('Stats 2'), onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => GraphsTwo()));
-            }),
-            RaisedButton(child: Text('Stats 1'), onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => GraphsOne()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Index()));
             }),
             RaisedButton(child: Text('Labo'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => Labo()));
