@@ -169,4 +169,10 @@ class DBHelper {
     return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 0 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 3 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 4');
   }
 
+  //Get value to edit for today
+  static Future<dynamic> getDataToaday(String dbValue,String date) async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('select "${dbValue}" as "Today" from Stats where createdAt like "${date}%"');
+  }
+
 }
