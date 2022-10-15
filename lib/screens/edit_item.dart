@@ -65,7 +65,11 @@ class _EditState extends State<Edit> {
                 DBHelper.getDataToday(dbValue,"'"+dbValue+"'", formatter.toString())
                     .then((res) {
                   print("RES "+res.toString());
-                  String result = res[0]['Today'].toString();
+                  String result = "";
+                  if(res.toString() == '[]'){
+                    result = "0";
+                  }
+                  result = res[0]['Today'].toString();
                   setState(() {
                     value = result;
                   });
@@ -101,9 +105,18 @@ class _EditState extends State<Edit> {
                       print(textfieldContent.text);
                       final now = new DateTime.now();
                       String formatter = DateFormat('yyyy-MM-dd').format(now);
-                      if(checkInput(int.parse(textfieldContent.text), category)){
+                      if(checkInput(int.parse(textfieldContent.text), category) == true){
                         DBHelper.updateStats(dbValue, textfieldContent.text, formatter);
                         textfieldContent.clear();
+                        Fluttertoast.showToast(
+                            msg: "Saved",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.orange,
+                            textColor: Colors.white,
+                            fontSize: 16.0
+                        );
                       }
                       else {
                         Fluttertoast.showToast(
@@ -111,10 +124,11 @@ class _EditState extends State<Edit> {
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.CENTER,
                             timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
+                            backgroundColor: Colors.orange,
                             textColor: Colors.white,
                             fontSize: 16.0
                         );
+                        textfieldContent.clear();
                       }
 
                     },
@@ -129,16 +143,16 @@ class _EditState extends State<Edit> {
 }
 
 bool checkInput(int input, String category){
+  bool ok = true;
   if(category == "2"){
     if(input < 0 || input > 1){
-      return false;
+      ok = false;
     }
-    return false;
   }else if (category == "1"){
     if(input < 0 || input > 4){
-      return false;
+      ok = false;
     }
   }
-  return true;
+  return ok;
 }
 
