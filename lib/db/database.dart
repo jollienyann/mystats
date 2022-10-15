@@ -169,4 +169,16 @@ class DBHelper {
     return await dbClient.rawQuery('Select Count("${dbValue}") as "Stats" from Stats where "${dbValue}" = 0 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 1 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 2 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 3 UNION ALL Select Count("${dbValue}") from Stats where "${dbValue}" = 4');
   }
 
+  //Get value to edit for today
+  static Future<dynamic> getDataToday(String dbValue1, String dbValue,String date) async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('Select category ,${dbValue1} as "Today" from Stats, ListObject where dbValue = ${dbValue} AND  createdAt like "${date}%"');
+  }
+
+  //Get value to edit for today
+  static Future<dynamic> getDataYesterday(String dbValue1, String dbValue,String date) async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('Select category ,${dbValue1} as "Today" from Stats, ListObject where dbValue = ${dbValue} AND  createdAt like "${date}%"');
+  }
+
 }

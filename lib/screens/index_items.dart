@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sam/screens/edit_item.dart';
 import '../db/database.dart';
 import '../stats_screens/graphs_one.dart';
 import '../stats_screens/graphs_two.dart';
@@ -84,7 +85,7 @@ class _IndexState extends State<Index> {
                                           print("DATA " +
                                               snapshot.data[index].dbValue
                                                   .toString());
-                                          //db Value to pass to grapghs screens
+                                          //db Value and text to pass to grapghs screens
                                           String valueToPassDb = snapshot
                                               .data[index].dbValue
                                               .toString();
@@ -120,7 +121,18 @@ class _IndexState extends State<Index> {
                                           size: 30,
                                         ),
                                         onPressed: () {
-                                          print('IconButton pressed ...');
+                                          //db Value and text to pass to Edit screens
+                                          String valueToPassDb = snapshot
+                                              .data[index].dbValue
+                                              .toString();
+                                          String valueToPassText = snapshot
+                                              .data[index].textValue
+                                              .toString();
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Edit(valueToPassDb,
+                                                          valueToPassText)));
                                         },
                                       ),
                                     ],
