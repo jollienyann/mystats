@@ -170,9 +170,15 @@ class DBHelper {
   }
 
   //Get value to edit for today
-  static Future<dynamic> getDataToaday(String dbValue,String date) async {
+  static Future<dynamic> getDataToday(String dbValue1, String dbValue,String date) async {
     var dbClient = await db();
-    return await dbClient.rawQuery('select "${dbValue}" as "Today" from Stats where createdAt like "${date}%"');
+    return await dbClient.rawQuery('Select category ,${dbValue1} as "Today" from Stats, ListObject where dbValue = ${dbValue} AND  createdAt like "${date}%"');
+  }
+
+  //Get value to edit for today
+  static Future<dynamic> getDataYesterday(String dbValue1, String dbValue,String date) async {
+    var dbClient = await db();
+    return await dbClient.rawQuery('Select category ,${dbValue1} as "Today" from Stats, ListObject where dbValue = ${dbValue} AND  createdAt like "${date}%"');
   }
 
 }

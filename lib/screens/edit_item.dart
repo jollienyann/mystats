@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../db/database.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Edit extends StatefulWidget {
   String dbValue;
@@ -17,6 +18,7 @@ class _EditState extends State<Edit> {
   String textValue;
 
   String value = "";
+  String category =  "";
 
   _EditState(this.dbValue, this.textValue);
 
@@ -44,17 +46,31 @@ class _EditState extends State<Edit> {
                     print(dbValue);
                     final now = new DateTime.now();
                     String formatter = DateFormat('yyyy-MM-dd').format(now);
-                    DBHelper.getDataToaday(dbValue, formatter.toString())
+                    print(formatter);
+                    DBHelper.getDataToday(dbValue,"'"+dbValue+"'", formatter.toString())
                         .then((res) {
-                      print(res);
                       String result = res[0]['Today'].toString();
+                      category = res[0]['category'].toString();
+                      print(category);
                       setState(() {
                         value = result;
                       });
                     });
                   },
                   child: Text("Today")),
-              ElevatedButton(onPressed: () {}, child: Text("Yesterday")),
+              ElevatedButton(onPressed: () {
+                final now = new DateTime.now().subtract(Duration(days:1));
+                String formatter = DateFormat('yyyy-MM-dd').format(now);
+                print(formatter);
+                DBHelper.getDataToday(dbValue,"'"+dbValue+"'", formatter.toString())
+                    .then((res) {
+                  print("RES "+res.toString());
+                  String result = res[0]['Today'].toString();
+                  setState(() {
+                    value = result;
+                  });
+                });
+              }, child: Text("Yesterday")),
             ],
           ),
           Padding(
@@ -83,6 +99,24 @@ class _EditState extends State<Edit> {
                 ElevatedButton(
                     onPressed: () {
                       print(textfieldContent.text);
+                      final now = new DateTime.now();
+                      String formatter = DateFormat('yyyy-MM-dd').format(now);
+                      if(checkInput(int.parse(textfieldContent.text), category)){
+                        DBHelper.updateStats(dbValue, textfieldContent.text, formatter);
+                        textfieldContent.clear();
+                      }
+                      else {
+                        Fluttertoast.showToast(
+                            msg: "Please enter valid value",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0
+                        );
+                      }
+
                     },
                     child: Text("Save"))
               ],
@@ -94,15 +128,17 @@ class _EditState extends State<Edit> {
   }
 }
 
-bool checkInput(int input){
-  if(input > 4){
+bool checkInput(int input, String category){
+  if(category == "2"){
+    if(input < 0 || input > 1){
+      return false;
+    }
     return false;
+  }else if (category == "1"){
+    if(input < 0 || input > 4){
+      return false;
+    }
   }
   return true;
 }
 
-Future? _fetchDataToday(String dbValue, String date) async {
-  var result = await DBHelper.getDataToaday(dbValue, date);
-  print(result.toString());
-  return result;
-}
