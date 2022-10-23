@@ -1,10 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:sam/db/database.dart';
 import 'package:intl/intl.dart';
 import 'package:sam/screens/add_newObject.dart';
+import 'package:sam/screens/settings.dart';
 
+import 'helper/change_theme_button_widget.dart';
 import 'screens/Labo.dart';
 import 'screens/index_items.dart';
 
@@ -50,7 +50,23 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('MyStats'),
-        automaticallyImplyLeading: false
+        automaticallyImplyLeading: false,
+        actions: [
+      Padding(
+      padding: EdgeInsets.only(right: 20.0),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Settings()),
+          );
+        },
+        child: Icon(
+          Icons.settings,
+          size: 26.0,
+        ),
+      )
+      )],
       ),
       body: FutureBuilder(
         future: _myList,
