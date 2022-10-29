@@ -62,7 +62,7 @@ class _EditState extends State<Edit> {
                 final now = new DateTime.now().subtract(Duration(days:1));
                 String formatter = DateFormat('yyyy-MM-dd').format(now);
                 print(formatter);
-                DBHelper.getDataToday(dbValue,"'"+dbValue+"'", formatter.toString())
+                DBHelper.getDataYesterday(dbValue,"'"+dbValue+"'", formatter.toString())
                     .then((res) {
                   print("RES "+res.toString());
                   String result = "";
