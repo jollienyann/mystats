@@ -49,9 +49,12 @@ class _EditState extends State<Edit> {
                     print(formatter);
                     DBHelper.getDataToday(dbValue,"'"+dbValue+"'", formatter.toString())
                         .then((res) {
-                      String result = res[0]['Today'].toString();
-                      category = res[0]['category'].toString();
-                      print(category);
+                      String result ="";
+                      if(res.toString() == '[]'){
+                      result = "0";
+                      }else {
+                      result = res[0]['Today'].toString();
+                      }
                       setState(() {
                         value = result;
                       });
@@ -62,14 +65,15 @@ class _EditState extends State<Edit> {
                 final now = new DateTime.now().subtract(Duration(days:1));
                 String formatter = DateFormat('yyyy-MM-dd').format(now);
                 print(formatter);
-                DBHelper.getDataToday(dbValue,"'"+dbValue+"'", formatter.toString())
+                DBHelper.getDataYesterday(dbValue,"'"+dbValue+"'", formatter.toString())
                     .then((res) {
                   print("RES "+res.toString());
                   String result = "";
                   if(res.toString() == '[]'){
                     result = "0";
+                  }else {
+                    result = res[0]['Today'].toString();
                   }
-                  result = res[0]['Today'].toString();
                   setState(() {
                     value = result;
                   });

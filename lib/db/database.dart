@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sam/home_page.dart';
 import 'package:sqflite/sqflite.dart';
@@ -181,4 +184,23 @@ class DBHelper {
     return await dbClient.rawQuery('Select category ,${dbValue1} as "Today" from Stats, ListObject where dbValue = ${dbValue} AND  createdAt like "${date}%"');
   }
 
+  //Export database
+  static Future<File> writeDBFileToDownloadFolder() async {
+    String dbName = "stats.db";
+    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    var innerPath = join(documentsDirectory.path, dbName);
+    print("INNERPATH" +innerPath);
+
+    Directory tempDir = await DownloadsPathProvider.downloadsDirectory;
+    String tempPath = tempDir.path;
+
+    var dbFile = File(innerPath);
+    var filePath = tempPath + '/stats_db_${ DateFormat('yyyy-MM-dd Hms').format(DateTime.now())}.db';
+    print("PATH "+filePath);
+    var dbFileBytes = dbFile.readAsBytesSync();
+    var bytes = ByteData.view(dbFileBytes.buffer);
+    final buffer = bytes.buffer;
+
+    return File(filePath).writeAsBytes(buffer.asUint8List(dbFileBytes.offsetInBytes, dbFileBytes.lengthInBytes));
+  }
 }
