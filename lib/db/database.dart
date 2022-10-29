@@ -3,7 +3,9 @@ import 'dart:io' as io;
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:downloads_path_provider/downloads_path_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sam/home_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -202,5 +204,33 @@ class DBHelper {
     final buffer = bytes.buffer;
 
     return File(filePath).writeAsBytes(buffer.asUint8List(dbFileBytes.offsetInBytes, dbFileBytes.lengthInBytes));
+  }
+
+  static Future importDatabase() async{
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      File file = File(result.files.single.path.toString());
+      print(file);
+      if (file == "") return;
+      try {
+        var status = await Permission.storage.status;
+        if (!status.isGranted) {
+          await Permission.storage.request();
+        } else {
+          var dbFileBytes = file.readAsBytesSync();
+          var bytes = ByteData.view(dbFileBytes.buffer);
+          final buffer = bytes.buffer;
+
+          io.Directory databasesPath = await getApplicationDocumentsDirectory();
+          String distPath = join(databasesPath.path, "stats.db");
+
+          await File(distPath).writeAsBytes(buffer.asUint8List(
+              dbFileBytes.offsetInBytes, dbFileBytes.lengthInBytes));
+        }
+      } catch (error) {
+        print(error);
+      }
+    }
   }
 }

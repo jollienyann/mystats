@@ -76,7 +76,13 @@ class _SettingsState extends State<Settings> {
         ),
             ElevatedButton(
               onPressed: () async {
-
+                var status = await Permission.storage.status;
+                if (status.isDenied) {
+                  await Permission.storage.request();
+                  return;
+                }
+                print(status);
+                await DBHelper.importDatabase();
               },
               child: const Text('Restore Db'),
             )
