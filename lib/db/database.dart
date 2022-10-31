@@ -1,6 +1,11 @@
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:downloads_path_provider/downloads_path_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sam/home_page.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -181,4 +186,51 @@ class DBHelper {
     return await dbClient.rawQuery('Select category ,${dbValue1} as "Today" from Stats, ListObject where dbValue = ${dbValue} AND  createdAt like "${date}%"');
   }
 
+  //Export database
+  static Future<File> writeDBFileToDownloadFolder() async {
+    String dbName = "stats.db";
+    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    var innerPath = join(documentsDirectory.path, dbName);
+    print("INNERPATH" +innerPath);
+
+    Directory tempDir = await DownloadsPathProvider.downloadsDirectory;
+    String tempPath = tempDir.path;
+
+    var dbFile = File(innerPath);
+    var filePath = tempPath + '/stats_db_${ DateFormat('yyyy-MM-dd Hms').format(DateTime.now())}.db';
+    print("PATH "+filePath);
+    var dbFileBytes = dbFile.readAsBytesSync();
+    var bytes = ByteData.view(dbFileBytes.buffer);
+    final buffer = bytes.buffer;
+
+    return File(filePath).writeAsBytes(buffer.asUint8List(dbFileBytes.offsetInBytes, dbFileBytes.lengthInBytes));
+  }
+
+  static Future importDatabase() async{
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      File file = File(result.files.single.path.toString());
+      print(file);
+      if (file == "") return;
+      try {
+        var status = await Permission.storage.status;
+        if (!status.isGranted) {
+          await Permission.storage.request();
+        } else {
+          var dbFileBytes = file.readAsBytesSync();
+          var bytes = ByteData.view(dbFileBytes.buffer);
+          final buffer = bytes.buffer;
+
+          io.Directory databasesPath = await getApplicationDocumentsDirectory();
+          String distPath = join(databasesPath.path, "stats.db");
+
+          await File(distPath).writeAsBytes(buffer.asUint8List(
+              dbFileBytes.offsetInBytes, dbFileBytes.lengthInBytes));
+        }
+      } catch (error) {
+        print(error);
+      }
+    }
+  }
 }
