@@ -206,6 +206,8 @@ class DBHelper {
     return File(filePath).writeAsBytes(buffer.asUint8List(dbFileBytes.offsetInBytes, dbFileBytes.lengthInBytes));
   }
 
+
+  //Import database
   static Future importDatabase() async{
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 

@@ -6,11 +6,21 @@ import 'helper/theme_provider.dart';
 import 'home_page.dart';
 
 Future main() async {
-//set shared preferences to not show intro again
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool('showHome') ?? false;
-  runApp(MyApp(showHome: showHome));
+  SharedPreferences.getInstance().then((prefs) {
+    var isDarkTheme = prefs.getBool("darkTheme") ?? false;
+    return runApp(
+      ChangeNotifierProvider<ThemeProvider>(
+        child: MyApp(showHome: showHome),
+        create: (BuildContext context) {
+          return ThemeProvider(isDarkTheme);
+        },
+      ),
+    );
+  });
+
 }
 
 class MyApp extends StatelessWidget {
@@ -19,18 +29,16 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key, required this.showHome,}) : super (key: key);
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-    create: (context) => ThemeProvider(),
-    builder: (context, _) {
-      final themeProvider = Provider.of<ThemeProvider>(context);
-
-      return MaterialApp(
-        themeMode: themeProvider.themeMode,
-        theme: MyThemes.lightTheme,
-        darkTheme: MyThemes.darkTheme,
-        home: showHome ? HomePage() : OnBoardingScreen(),
-      );
-    },
-  );
+  Widget build(BuildContext context) {
+    return Consumer<ThemeProvider>(
+      builder: (context, value, child) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: value.getTheme(),
+          home: showHome ? HomePage() : OnBoardingScreen(),
+        );
+      },
+    );
+  }
 }
 
