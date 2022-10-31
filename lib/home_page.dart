@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:sam/screens/add_newObject.dart';
 import 'package:sam/screens/settings.dart';
 
-import 'helper/change_theme_button_widget.dart';
 import 'screens/Labo.dart';
 import 'screens/index_items.dart';
 
@@ -265,13 +264,13 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton:Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            RaisedButton(child: const Icon(Icons.add), onPressed: (){
+            ElevatedButton(child: const Icon(Icons.add), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
             }),
-            RaisedButton(child: Text('Stats 2'), onPressed: (){
+            ElevatedButton(child: Text('Stats 2'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => Index()));
             }),
-            RaisedButton(child: Text('Labo'), onPressed: (){
+            ElevatedButton(child: Text('Labo'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => Labo()));
             }),
           ]

@@ -42,15 +42,15 @@ class _SettingsState extends State<Settings> {
       body: Padding(
         padding: EdgeInsets.only(left: 20, top: 20,right: 10,bottom: 10),
         child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Theme", style: TextStyle(fontSize: 20)),
-            Switch.adaptive(
-            value: themeProvider.isDarkMode,
-            onChanged: (value) {
-              final provider = Provider.of<ThemeProvider>(context, listen: false);
-              provider.toggleTheme(value);
-            },
+            ElevatedButton(
+              onPressed: () {
+                Provider.of<ThemeProvider>(context, listen: false).swapTheme();
+              }, child: Text("Mode"),
           ),
+        Text("Backup db", style: TextStyle(fontSize: 20)),
         ElevatedButton(
           onPressed: () async {
             var status = await Permission.storage.status;
@@ -74,6 +74,7 @@ class _SettingsState extends State<Settings> {
           },
           child: const Text('Backup Db'),
         ),
+            Text("Import db", style: TextStyle(fontSize: 20)),
             ElevatedButton(
               onPressed: () async {
                 var status = await Permission.storage.status;
@@ -83,6 +84,15 @@ class _SettingsState extends State<Settings> {
                 }
                 print(status);
                 await DBHelper.importDatabase();
+                Fluttertoast.showToast(
+                    msg: "Imported",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.orange,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                );
               },
               child: const Text('Restore Db'),
             )
