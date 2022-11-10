@@ -266,13 +266,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             ElevatedButton(child: const Icon(Icons.add), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddObject()));
-            }, style: ElevatedButton.styleFrom(primary: Colors.orange[400])),
+            }, style: ElevatedButton.styleFrom(primary: Colors.lightBlueAccent[400])),
             ElevatedButton(child: Text('Stats 2'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => Index()));
-            }, style: ElevatedButton.styleFrom(primary: Colors.orange[400])),
+            }, style: ElevatedButton.styleFrom(primary: Colors.lightBlueAccent[400])),
             ElevatedButton(child: Text('Labo'), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => Labo()));
-            }, style: ElevatedButton.styleFrom(primary: Colors.orange[400])),
+            }, style: ElevatedButton.styleFrom(primary: Colors.lightBlueAccent[400])),
           ]
       ),
     );

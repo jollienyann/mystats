@@ -45,7 +45,7 @@ class _IndexState extends State<Index> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(40.0),
                           ),
-                          color: Colors.orange[200],
+                          color: Colors.lightBlueAccent[200],
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
