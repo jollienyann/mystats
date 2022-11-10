@@ -25,7 +25,6 @@ class ThemeProvider extends ChangeNotifier {
       _selectedTheme = dark;
       await prefs.setBool("darkTheme", true);
     }
-
     notifyListeners();
   }
 
