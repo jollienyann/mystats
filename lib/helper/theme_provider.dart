@@ -11,6 +11,7 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeData light = ThemeData.light().copyWith();
 
+
   ThemeProvider(bool darkThemeOn) {
     _selectedTheme = darkThemeOn ? dark : light;
   }
@@ -25,7 +26,6 @@ class ThemeProvider extends ChangeNotifier {
       _selectedTheme = dark;
       await prefs.setBool("darkTheme", true);
     }
-
     notifyListeners();
   }
 

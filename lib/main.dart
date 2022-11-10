@@ -26,15 +26,18 @@ Future main() async {
 class MyApp extends StatelessWidget {
   final bool showHome;
 
+
   const MyApp({Key? key, required this.showHome,}) : super (key: key);
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = new ThemeData();
     return Consumer<ThemeProvider>(
       builder: (context, value, child) {
+        themeData = value.getTheme()!;
         return MaterialApp(
           title: 'Flutter Demo',
-          theme: value.getTheme(),
+          theme: themeData,
           home: showHome ? HomePage() : OnBoardingScreen(),
         );
       },

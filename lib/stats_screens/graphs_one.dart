@@ -89,19 +89,22 @@ class _GraphsOneState extends State<GraphsOne> {
                               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                             ),
                           ),
-                          SfCartesianChart(
-                              primaryYAxis: NumericAxis(
-                                  numberFormat: NumberFormat.compact(), decimalPlaces: 0),
-                              primaryXAxis: NumericAxis(
-                                  numberFormat: NumberFormat.compact(), decimalPlaces: 0),
-                              series: <ChartSeries<ChartData, int>>[
-                                // Renders column chart
-                                ColumnSeries<ChartData, int>(
-                                    color: Colors.orange[200],
+                          SfCircularChart(
+                              legend: Legend(isVisible: true,borderColor: Colors.black, borderWidth: 2),
+                              series: <CircularSeries>[
+                                // Render pie chart
+                                PieSeries<ChartData, String>(
                                     dataSource: chartData,
-                                    xValueMapper: (ChartData data, _) => data.x,
-                                    yValueMapper: (ChartData data, _) => data.y)
-                              ]),
+                                    pointColorMapper:(ChartData data,  _) => data.color,
+                                    xValueMapper: (ChartData data, _) => data.x.toString(),
+                                    yValueMapper: (ChartData data, _) => data.y,
+                                    dataLabelSettings: DataLabelSettings(
+                                      // Renders the data label
+                                        isVisible: true
+                                    )
+                                )
+                              ]
+                          ),
                         ],
                       ),
                     ),
@@ -146,8 +149,9 @@ class DataOne {
 }
 
 class ChartData {
-  ChartData(this.x, this.y);
+  ChartData(this.x, this.y, [this.color]);
 
   final int x;
   final double y;
+  final Color? color;
 }
